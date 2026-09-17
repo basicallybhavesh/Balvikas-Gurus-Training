@@ -17,31 +17,35 @@
   }
   .tray:empty::after{content:'All labels placed. Press Check answers.';color:var(--accent);font-size:.85rem;font-weight:700}
   .rows{display:grid;gap:10px}
+  .rows{gap:14px}
   .row{
-    display:grid;grid-template-columns:minmax(104px,1.1fr) 58px minmax(0,1.3fr);
-    gap:10px;align-items:center;
+    display:grid;grid-template-columns:minmax(0,1fr) 128px minmax(0,1fr);
+    gap:12px;align-items:center;
   }
   .row .slot{min-height:54px}
   .row .media{
-    width:58px;height:58px;border-radius:10px;overflow:hidden;
+    width:128px;height:128px;border-radius:14px;overflow:hidden;
     border:1px solid var(--line);background:var(--paper-deep);
-    display:grid;place-items:center;font-size:1.7rem;
+    box-shadow:var(--shadow-sm);
+    display:grid;place-items:center;font-size:3rem;
   }
   .row .media img{width:100%;height:100%;object-fit:cover}
-  .row .who{font-weight:700;font-size:1rem;line-height:1.25}
+  .row .who{font-weight:700;font-size:1.05rem;line-height:1.25}
   .row.graded .who small{display:block;font-weight:600;font-size:.74rem;color:var(--bad)}
   .slot .chip{box-shadow:none;width:100%}
   .roundhead{margin-bottom:12px}
   .roundhead h2{font-size:1.25rem}
   .roundhead p{margin:2px 0 0;font-size:.86rem;color:var(--ink-soft)}
   @media(min-width:640px){
-    .row{grid-template-columns:minmax(140px,1fr) 74px minmax(0,1.2fr)}
-    .row .media{width:74px;height:74px;font-size:2.1rem}
+    .rows{gap:18px}
+    .row{grid-template-columns:minmax(160px,1fr) 240px minmax(0,1fr);gap:16px}
+    .row .media{width:240px;height:180px;border-radius:16px;font-size:4rem}
+    .row .who{font-size:1.2rem}
   }
 </style>
 </head>
 <body data-accent="peacock">
-<div class="wrap">
+<div class="wrap wrap-wide">
 
   <section id="start" class="panel center" style="margin-top:6px">
     <span class="tag">Game 2</span>

@@ -308,15 +308,10 @@
             '<button class="btn ghost small" id="bvRefresh">Refresh</button>' +
           '</div>' +
           '<div id="bvBoard"></div>' +
-          '<div class="btnrow">' +
-            '<button class="btn" id="bvAgain">Play again</button>' +
-            '<a class="btn ghost" href="/">All games</a>' +
-          '</div>' +
         '</div>' +
       '</div>';
     document.body.appendChild(s);
 
-    document.getElementById('bvAgain').onclick = () => location.reload();
     document.getElementById('bvRefresh').onclick = function () {
       this.disabled = true;
       this.textContent = 'Refreshing';

@@ -163,6 +163,7 @@
 
   function finishWord() {
     hintBtn.disabled = true;
+    BV.timer.stop();   // pause between rounds
     nextBtn.hidden = false;
     nextBtn.textContent = ix + 1 >= DATA.words.length ? 'See your score' : 'Next word';
   }
@@ -203,6 +204,7 @@
         breakdown, meta: { solved }
       });
     }
+    BV.timer.start();   // clock was paused while the answer was shown
     loadWord();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };

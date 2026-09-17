@@ -102,6 +102,7 @@
 
     noteEl.hidden = false;
     noteEl.textContent = q.note;
+    BV.timer.stop();   // pause between rounds
     nextBtn.hidden = false;
     nextBtn.textContent = ix + 1 >= ROUNDS ? 'See your score' : 'Next';
     streakEl.textContent = streak >= 2 ? 'On a run of ' + streak : '';
@@ -118,6 +119,7 @@
         breakdown, meta: { correct: right }
       });
     }
+    BV.timer.start();   // clock was paused while the answer was shown
     ask();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };

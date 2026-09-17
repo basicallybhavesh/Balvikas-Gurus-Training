@@ -95,6 +95,7 @@
     rail.mark(ix, correct ? 'done' : 'miss');
     breakdown.push({ label: item.name, value: correct ? '+' + got : btn.dataset.n, ok: correct });
 
+    BV.timer.stop();   // pause between rounds
     nextBtn.hidden = false;
     nextBtn.textContent = ix + 1 >= deck.length ? 'See your score' : 'Next picture';
   });
@@ -110,6 +111,7 @@
         breakdown, meta: { identified: right }
       });
     }
+    BV.timer.start();   // clock was paused while the answer was shown
     startRound();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };

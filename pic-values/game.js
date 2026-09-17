@@ -81,6 +81,7 @@
     if (hits === sc.shows.length && !slips) { BV.sfx.good(); BV.toast('Every one, and nothing extra', 'good'); }
     else { BV.sfx.bad(); }
 
+    BV.timer.stop();   // pause between rounds
     submitBtn.textContent = ix + 1 >= DATA.scenes.length ? 'See your score' : 'Next picture';
   }
 
@@ -100,6 +101,7 @@
         breakdown, meta: { clean }
       });
     }
+    BV.timer.start();   // clock was paused while the answer was shown
     paint();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };

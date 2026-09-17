@@ -114,6 +114,7 @@
     if (got === round.items.length) { BV.sfx.good(); BV.toast('All ' + got + ' correct', 'good'); }
     else { BV.sfx.bad(); BV.toast(got + ' of ' + round.items.length + ' correct'); }
 
+    BV.timer.stop();   // pause between rounds
     document.getElementById('board').dataset.locked = '1';
   }
 
@@ -121,6 +122,7 @@
     if (document.getElementById('board').dataset.locked === '1') {
       roundIx++;
       if (roundIx >= DATA.rounds.length) return end();
+      BV.timer.start();   // clock was paused while the answer was shown
       renderRound();
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
