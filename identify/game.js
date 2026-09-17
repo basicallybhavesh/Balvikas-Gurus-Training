@@ -41,7 +41,7 @@
 
     pic.src = item.img;
     pic.style.transition = 'none';
-    pic.style.filter = 'blur(20px) saturate(.6)';
+    pic.style.filter = 'blur(14px) saturate(.6)';
     pic.style.transform = 'scale(1.14)';
     pic.offsetWidth; // force reflow so the reset above is not animated
     pic.style.transition = '';
@@ -54,7 +54,7 @@
     ticker = setInterval(() => {
       elapsed += 0.25;
       const t = Math.min(1, elapsed / SPAN);
-      pic.style.filter = 'blur(' + (20 * (1 - t)).toFixed(2) + 'px) saturate(' + (0.6 + 0.4 * t).toFixed(2) + ')';
+      pic.style.filter = 'blur(' + (14 * (1 - t)).toFixed(2) + 'px) saturate(' + (0.6 + 0.4 * t).toFixed(2) + ')';
       pic.style.transform = 'scale(' + (1.14 - 0.14 * t).toFixed(3) + ')';
       worthEl.textContent = worthNow();
       if (t >= 1) clearInterval(ticker);
