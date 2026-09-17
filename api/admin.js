@@ -41,7 +41,17 @@ export default function handler(req, res) {
   #msg.bad{color:var(--rose)}
   .muted{color:var(--soft);font-size:.85rem}
   code{background:#f0e6d3;padding:1px 5px;border-radius:4px}
-  @media(max-width:560px){th:nth-child(3),td:nth-child(3){display:none}}
+  a.game{color:var(--peacock);font-weight:600;text-decoration:none;border-bottom:1px dotted currentColor}
+  a.game:hover{color:var(--saffron)}
+  #boardPanel{display:none}
+  #boardPanel.open{display:block}
+  #boardPanel h2{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  #boardPanel h2 .muted{font-weight:400}
+  #boardPanel h2 button{margin-left:auto}
+  @media(max-width:560px){
+    .panel:not(#boardPanel) th:nth-child(3),.panel:not(#boardPanel) td:nth-child(3){display:none}
+    #boardPanel th:nth-child(5),#boardPanel td:nth-child(5){display:none}
+  }
 </style></head>
 <body><div class="wrap">
   <h1>Games admin</h1>
@@ -60,11 +70,19 @@ export default function handler(req, res) {
 
   <div class="panel">
     <h2>Leaderboards</h2>
+    <p class="muted" style="margin:-6px 0 12px">Click a game name to see its full leaderboard.</p>
     <table><thead><tr>
       <th>Game</th><th class="num">Entries</th><th class="num">Top score</th><th class="num">Last played</th><th></th>
     </tr></thead><tbody id="statsBody">
       <tr><td colspan="5" class="muted">Loading…</td></tr>
     </tbody></table>
+  </div>
+
+  <div class="panel" id="boardPanel">
+    <h2><span id="boardTitle">Leaderboard</span><span class="muted" id="boardCount"></span><button id="boardClose">Close</button></h2>
+    <table><thead><tr>
+      <th class="num">#</th><th>Name</th><th class="num">Score</th><th class="num">Time</th><th class="num">Played</th><th></th>
+    </tr></thead><tbody id="boardBody"></tbody></table>
   </div>
 
   <div class="panel">
@@ -104,7 +122,7 @@ function renderStats(stats){
   const body = document.getElementById('statsBody');
   body.innerHTML = GAMES.map(g => {
     const s = stats[g.slug] || { plays:0, top:null, last:null };
-    return '<tr><td>' + esc(g.title) + '</td>' +
+    return '<tr><td><a href="#" class="game" data-board="' + g.slug + '">' + esc(g.title) + '</a></td>' +
       '<td class="num">' + s.plays + '</td>' +
       '<td class="num">' + (s.top === null ? '—' : s.top) + '</td>' +
       '<td class="num">' + fmtDate(s.last) + '</td>' +
@@ -123,20 +141,59 @@ function renderRecent(rows){
   ).join('');
 }
 
+let openBoard = null;
+
+function renderBoard(slug, rows){
+  const panel = document.getElementById('boardPanel');
+  const body = document.getElementById('boardBody');
+  document.getElementById('boardTitle').textContent = titleOf(slug) + ' leaderboard';
+  document.getElementById('boardCount').textContent = rows.length
+    ? (rows.length === 100 ? 'top 100' : rows.length + (rows.length === 1 ? ' entry' : ' entries'))
+    : '';
+  if (!rows.length){ body.innerHTML = '<tr><td colspan="6" class="muted">No scores yet.</td></tr>'; }
+  else body.innerHTML = rows.map((r, i) =>
+    '<tr><td class="num">' + (i + 1) + '</td><td>' + esc(r.player) + '</td>' +
+    '<td class="num">' + r.score + '/' + r.max_score + '</td>' +
+    '<td class="num">' + fmtTime(r.duration_ms) + '</td>' +
+    '<td class="num">' + fmtDate(r.created_at) + '</td>' +
+    '<td style="text-align:right"><button data-del="' + r.id + '">Remove</button></td></tr>'
+  ).join('');
+  panel.classList.add('open');
+}
+
+async function showBoard(slug, scroll){
+  try {
+    const data = await act('board', { game: slug });
+    openBoard = slug;
+    renderBoard(slug, data.rows);
+    if (scroll) document.getElementById('boardPanel').scrollIntoView({ behavior:'smooth', block:'start' });
+  } catch (e) { say(e.message, true); }
+}
+
+function closeBoard(){
+  openBoard = null;
+  document.getElementById('boardPanel').classList.remove('open');
+}
+
 async function load(){
   try {
     const data = await act('stats');
     renderStats(data.stats);
     renderRecent(data.recent);
+    if (openBoard) showBoard(openBoard, false);
     say('Counts updated ' + new Date().toLocaleTimeString() + '.');
   } catch (e) { say(e.message, true); }
 }
 
 document.addEventListener('click', async (ev) => {
+  const board = ev.target.closest('[data-board]');
   const clear = ev.target.closest('[data-clear]');
   const del = ev.target.closest('[data-del]');
   try {
-    if (clear){
+    if (board){
+      ev.preventDefault();
+      showBoard(board.dataset.board, true);
+    } else if (clear){
       const slug = clear.dataset.clear;
       if (!confirm('Delete every score for “' + titleOf(slug) + '”? This cannot be undone.')) return;
       const r = await act('clear', { game: slug });
@@ -152,6 +209,7 @@ document.addEventListener('click', async (ev) => {
 });
 
 document.getElementById('refreshBtn').onclick = load;
+document.getElementById('boardClose').onclick = closeBoard;
 
 document.getElementById('initBtn').onclick = async () => {
   try { await act('init'); say('Tables are ready.'); load(); }

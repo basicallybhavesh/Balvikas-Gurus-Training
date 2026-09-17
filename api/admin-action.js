@@ -30,6 +30,17 @@ export default async function handler(req, res) {
       return res.status(200).json({ ok: true, stats, recent });
     }
 
+    if (action === 'board') {
+      const game = String(body.game || '');
+      if (!SLUGS.includes(game)) return fail(res, 400, 'Unknown game.');
+      const rows = await withSchema(() => sql`
+        SELECT id, player, score, max_score, duration_ms, created_at
+        FROM scores WHERE game = ${game}
+        ORDER BY score DESC, duration_ms ASC, created_at ASC
+        LIMIT 100`);
+      return res.status(200).json({ ok: true, game, rows });
+    }
+
     if (action === 'clear') {
       const game = String(body.game || '');
       if (!SLUGS.includes(game)) return fail(res, 400, 'Unknown game.');
