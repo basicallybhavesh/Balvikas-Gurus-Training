@@ -16,6 +16,32 @@
 
   .head{text-align:center;margin-bottom:clamp(18px,3vw,30px)}
   .head h1{font-size:clamp(2rem,5.2vw,3.6rem);line-height:1.05}
+  .qrbtn{
+    margin-top:12px;font:inherit;font-weight:700;font-size:.95rem;cursor:pointer;
+    background:var(--card);color:var(--accent);border:1px solid var(--line);border-radius:999px;
+    padding:8px 18px;box-shadow:var(--shadow-sm)
+  }
+  .qrbtn:hover{border-color:var(--accent)}
+
+  /* ------------------------------ QR popup ----------------------------- */
+  .qrpop{
+    position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:20px;
+    background:rgba(36,26,18,.6);backdrop-filter:blur(4px)
+  }
+  .qrpop[hidden]{display:none}
+  .qrcard{
+    background:var(--card);border-radius:24px;box-shadow:var(--shadow);text-align:center;
+    padding:clamp(20px,3vw,32px);width:min(92vw,560px);
+    border-top:8px solid var(--accent)
+  }
+  .qrcard h2{font-size:clamp(1.3rem,3vw,1.9rem);margin-bottom:4px}
+  .qrlede{color:var(--ink-soft);margin:0 0 16px;font-weight:600}
+  .qrbox{
+    width:min(70vw,60vh,420px);aspect-ratio:1/1;margin:0 auto;
+    background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px
+  }
+  .qrbox svg{width:100%;height:100%;display:block}
+  .qrurl{margin:14px 0 16px;font-weight:700;color:var(--accent);overflow-wrap:anywhere;font-size:clamp(.95rem,2vw,1.2rem)}
 
   /* ------------------------------ podium ------------------------------ */
   .podium{
@@ -130,6 +156,7 @@
 <main id="app" class="display" aria-live="polite"></main>
 
 <script src="/assets/site.js?v=3"></script>
+<script src="/assets/qrcode.js"></script>
 <script>
 (function () {
   const GAMES = [
@@ -142,7 +169,7 @@
     { slug: 'identify',    title: 'Identify the Character',      accent: 'plum',     tint: '#6E2E6B' }
   ];
   const SITE_NAME = (window.SITE && (window.SITE.footer || window.SITE.name)) || 'Sri Sathya Sai Balvikas Gurus Training';
-  const REFRESH_MS = 10000;
+  const REFRESH_MS = 20000;
   const LIMIT = 50;
 
   const app = document.getElementById('app');
@@ -176,7 +203,17 @@
   let timer = null;
 
   app.innerHTML =
-    '<header class="head"><h1>' + esc(game.title) + '</h1></header>' +
+    '<header class="head"><h1>' + esc(game.title) + '</h1>' +
+      '<button class="qrbtn" id="qrBtn" type="button">▦ Scan to play</button></header>' +
+    '<div class="qrpop" id="qrPop" hidden>' +
+      '<div class="qrcard" role="dialog" aria-modal="true" aria-label="QR code to play">' +
+        '<h2>' + esc(game.title) + '</h2>' +
+        '<p class="qrlede">Scan with your phone camera to play</p>' +
+        '<div class="qrbox" id="qrBox"></div>' +
+        '<p class="qrurl" id="qrUrl"></p>' +
+        '<button class="btn small" id="qrClose" type="button">Close</button>' +
+      '</div>' +
+    '</div>' +
     '<section class="podium" id="podium"></section>' +
     '<section class="list" id="list"></section>' +
     '<p class="site">' + esc(SITE_NAME) + '</p>' +
@@ -184,7 +221,7 @@
       '<span class="meta"><span class="dot busy" id="dot"></span><span id="status">Loading…</span>' +
         '<button id="refreshBtn" type="button" title="Refresh now">↻ Refresh</button></span>' +
       '<span>Points first; ties go to the faster finish. Checks for new scores every ' + (REFRESH_MS / 1000) + ' seconds.</span>' +
-      '<span><a href="/leaderboard">All boards</a> &nbsp;·&nbsp; <a href="/' + game.slug + '">Play</a> &nbsp;·&nbsp; <span class="kbd">F</span> full screen</span>' +
+      '<span><a href="/leaderboard">All boards</a> &nbsp;·&nbsp; <a href="/' + game.slug + '">Play</a> &nbsp;·&nbsp; <span class="kbd">F</span> full screen &nbsp;·&nbsp; <span class="kbd">Q</span> QR code</span>' +
     '</footer>';
 
   const podium = document.getElementById('podium');
@@ -193,6 +230,26 @@
   const dot = document.getElementById('dot');
   const refreshBtn = document.getElementById('refreshBtn');
   refreshBtn.addEventListener('click', load);
+
+  /* ------------------------------ QR popup ----------------------------- */
+  const qrPop = document.getElementById('qrPop');
+  const playUrl = location.origin + '/' + game.slug;
+  let qrDrawn = false;
+  function openQr() {
+    if (!qrDrawn && window.qrcode) {
+      const qr = window.qrcode(0, 'M');
+      qr.addData(playUrl);
+      qr.make();
+      document.getElementById('qrBox').innerHTML = qr.createSvgTag({ cellSize: 10, margin: 0, scalable: true });
+      document.getElementById('qrUrl').textContent = playUrl.replace(/^https?:\/\//, '');
+      qrDrawn = true;
+    }
+    qrPop.hidden = false;
+  }
+  function closeQr() { qrPop.hidden = true; }
+  document.getElementById('qrBtn').addEventListener('click', openQr);
+  document.getElementById('qrClose').addEventListener('click', closeQr);
+  qrPop.addEventListener('click', ev => { if (ev.target === qrPop) closeQr(); });
 
   const MEDALS = ['🥇', '🥈', '🥉'];
   const STEPS = ['first', 'second', 'third'];
@@ -266,6 +323,8 @@
       if (document.fullscreenElement) document.exitFullscreen();
       else document.documentElement.requestFullscreen && document.documentElement.requestFullscreen();
     } else if (ev.key === 'r' || ev.key === 'R') load();
+    else if (ev.key === 'q' || ev.key === 'Q') { qrPop.hidden ? openQr() : closeQr(); }
+    else if (ev.key === 'Escape') closeQr();
   });
   document.addEventListener('visibilitychange', () => { if (!document.hidden) load(); });
 
