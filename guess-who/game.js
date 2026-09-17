@@ -41,7 +41,7 @@
 
     pic.src = p.img;
     pic.alt = 'Half a face, gradually uncovering';
-    cover.style.width = '50%';
+    cover.style.width = '75%';
     worthEl.textContent = HIGH;
 
     optsEl.innerHTML = optionsFor(p).map(n =>
@@ -51,7 +51,7 @@
     ticker = setInterval(() => {
       elapsed += 0.25;
       const t = Math.min(1, elapsed / SPAN);
-      cover.style.width = (50 * (1 - t)).toFixed(2) + '%';
+      cover.style.width = (75 * (1 - t)).toFixed(2) + '%';
       worthEl.textContent = worthNow();
       if (t >= 0.5 && clueEl.hidden && p.clue) {
         clueEl.hidden = false;
