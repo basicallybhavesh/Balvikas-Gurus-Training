@@ -18,7 +18,7 @@ window.PICVALUES = {
 
     {
       title: 'The umbrella',
-      image: '/assets/img/kindness-umbrella.png',
+      image: '/assets/img/kindness-umbrella.jpg',
       fit: 'contain',
       shows:  ['Kindness', 'Compassion', 'Sharing', 'Concern for another', 'Selflessness'],
       absent: ['Ambition', 'Pride', 'Indifference', 'Competition', 'Obedience'],

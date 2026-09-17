@@ -144,10 +144,16 @@
     });
   }
 
-  document.getElementById('startBtn').onclick = function () {
-    elStart.hidden = true;
-    elPlay.hidden = false;
-    renderRound();
-    BV.timer.start();
+  const startBtn = document.getElementById('startBtn');
+  startBtn.onclick = function () {
+    startBtn.disabled = true;
+    startBtn.textContent = 'Loading pictures…';
+    const images = DATA.rounds.flatMap(r => r.items.map(it => it.img));
+    BV.preloadImages(images).then(() => {
+      elStart.hidden = true;
+      elPlay.hidden = false;
+      renderRound();
+      BV.timer.start();
+    });
   };
 })();

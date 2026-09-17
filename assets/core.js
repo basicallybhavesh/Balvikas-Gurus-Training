@@ -31,6 +31,20 @@
 
   BV.sample = (arr, n) => BV.shuffle(arr).slice(0, n);
 
+  /* Loads every image up front so the reveal effects (blur, sliding covers)
+     run on a picture that is already in memory instead of popping in
+     mid-animation. Never rejects — a broken URL just resolves anyway,
+     since a stuck "Loading…" button is worse than one missing picture. */
+  BV.preloadImages = function (urls) {
+    const unique = Array.from(new Set(urls.filter(Boolean)));
+    const loadOne = src => new Promise(resolve => {
+      const img = new Image();
+      img.onload = img.onerror = resolve;
+      img.src = src;
+    });
+    return Promise.all(unique.map(loadOne));
+  };
+
   BV.clock = function (ms) {
     const s = Math.max(0, Math.round(ms / 1000));
     return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
@@ -295,29 +309,33 @@
     s.hidden = true;
     s.innerHTML =
       '<div class="sheet-inner">' +
-        '<div class="sheet-head">' +
-          '<h2 id="bvHead">Well played</h2>' +
-          '<div class="sub" id="bvSub"></div>' +
-          '<div class="scoreline">' +
-            '<div><b id="bvFinal">0</b><span id="bvOutOf">points</span></div>' +
-            '<div><b id="bvTime">0:00</b><span>time taken</span></div>' +
+        '<div class="namestep" id="bvNameStep">' +
+          '<h2>That’s the last one!</h2>' +
+          '<p class="hint">Add your name to save your score and see how you did. The clock is already stopped.</p>' +
+          '<div class="namebox">' +
+            '<input id="bvName" maxlength="24" placeholder="Your name" autocomplete="off" spellcheck="false">' +
+            '<button class="btn" id="bvSave">Save</button>' +
           '</div>' +
+          '<div id="bvSaveMsg"></div>' +
         '</div>' +
-        '<div class="sheet-body">' +
-          '<ul class="breakdown" id="bvBreak"></ul>' +
-          '<div id="bvSaveArea">' +
-            '<p class="hint" style="margin:0 0 6px">Add your name to the leaderboard. The clock is already stopped.</p>' +
-            '<div class="namebox">' +
-              '<input id="bvName" maxlength="24" placeholder="Your name" autocomplete="off" spellcheck="false">' +
-              '<button class="btn" id="bvSave">Save</button>' +
+        '<div id="bvResultStep" hidden>' +
+          '<div class="sheet-head">' +
+            '<h2 id="bvHead">Well played</h2>' +
+            '<div class="sub" id="bvSub"></div>' +
+            '<div class="scoreline">' +
+              '<div><b id="bvFinal">0</b><span id="bvOutOf">points</span></div>' +
+              '<div><b id="bvTime">0:00</b><span>time taken</span></div>' +
             '</div>' +
-            '<div id="bvSaveMsg"></div>' +
           '</div>' +
-          '<div class="board-head">' +
-            '<h3>Leaderboard</h3>' +
-            '<button class="btn ghost small" id="bvRefresh">Refresh</button>' +
+          '<div class="sheet-body">' +
+            '<ul class="breakdown" id="bvBreak"></ul>' +
+            '<p class="saved" id="bvSaved"></p>' +
+            '<div class="board-head">' +
+              '<h3>Leaderboard</h3>' +
+              '<button class="btn ghost small" id="bvRefresh">Refresh</button>' +
+            '</div>' +
+            '<div id="bvBoard"></div>' +
           '</div>' +
-          '<div id="bvBoard"></div>' +
         '</div>' +
       '</div>';
     document.body.appendChild(s);
@@ -391,17 +409,37 @@
       BV.esc(b.value) + '</span></li>').join('');
 
     const sheet = document.getElementById('bvSheet');
-    sheet.hidden = false;
-
+    const nameStep = document.getElementById('bvNameStep');
+    const resultStep = document.getElementById('bvResultStep');
     const nameInput = document.getElementById('bvName');
     const saveBtn = document.getElementById('bvSave');
     const saveMsg = document.getElementById('bvSaveMsg');
     const board = document.getElementById('bvBoard');
+
+    nameStep.hidden = false;
+    resultStep.hidden = true;
     saveMsg.innerHTML = '';
     nameInput.value = BV.playerName();
-
     saveBtn.disabled = false;
     saveBtn.textContent = 'Save';
+    sheet.hidden = false;
+
+    function reveal(player, rank) {
+      const savedEl = document.getElementById('bvSaved');
+      if (rank) {
+        lastSavedName = player;
+        savedEl.className = 'saved';
+        savedEl.textContent = 'Saved. ' + player + ' is number ' + rank + ' on this board.';
+      } else {
+        savedEl.className = 'saveerr';
+        savedEl.textContent = 'This score was not saved to the leaderboard.';
+      }
+      nameStep.hidden = true;
+      resultStep.hidden = false;
+      sheet.scrollTop = 0;
+      BV.loadBoard(board);
+      if (score > 0) { Sfx.win(); BV.petals(score >= max * 0.7 ? 34 : 16); }
+    }
 
     function save() {
       const player = nameInput.value.trim();
@@ -409,6 +447,7 @@
       BV.setPlayerName(player);
       saveBtn.disabled = true;
       saveBtn.textContent = 'Saving';
+      saveMsg.innerHTML = '';
       fetch('/api/score', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -420,23 +459,19 @@
         .then(r => r.json())
         .then(data => {
           if (!data.ok) throw new Error(data.error || 'Could not save.');
-          lastSavedName = player;
-          document.getElementById('bvSaveArea').innerHTML =
-            '<p class="saved">Saved. ' + BV.esc(player) + ' is number ' + data.rank + ' on this board.</p>';
-          BV.loadBoard(board);
+          reveal(player, data.rank);
         })
         .catch(err => {
           saveBtn.disabled = false;
-          saveBtn.textContent = 'Save';
-          saveMsg.innerHTML = '<p class="saveerr">' + BV.esc(err.message) + '</p>';
+          saveBtn.textContent = 'Try again';
+          saveMsg.innerHTML = '<p class="saveerr">' + BV.esc(err.message) + '</p>' +
+            '<button type="button" class="btn ghost small" id="bvSkip">Show my score without saving</button>';
+          document.getElementById('bvSkip').onclick = () => reveal(player, 0);
         });
     }
 
     saveBtn.onclick = save;
     nameInput.onkeydown = e => { if (e.key === 'Enter') save(); };
-
-    BV.loadBoard(board);
-    if (score > 0) { Sfx.win(); BV.petals(score >= max * 0.7 ? 34 : 16); }
     setTimeout(() => nameInput.focus({ preventScroll: true }), 350);
   };
 

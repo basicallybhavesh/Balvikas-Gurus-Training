@@ -9,18 +9,17 @@ export default async function handler(req, res) {
   try {
     const sql = db();
     const rows = await withSchema(() => sql`
-      SELECT player, score, max_score, duration_ms, created_at
+      SELECT player, score, max_score, duration_ms, created_at,
+             COUNT(*) OVER()::int AS plays
       FROM scores
       WHERE game = ${game}
       ORDER BY score DESC, duration_ms ASC, created_at ASC
       LIMIT ${limit}`);
 
-    const totals = await sql`SELECT COUNT(*)::int AS plays FROM scores WHERE game = ${game}`;
-
     res.status(200).json({
       ok: true,
       game,
-      plays: totals[0].plays,
+      plays: rows.length ? rows[0].plays : 0,
       fetchedAt: new Date().toISOString(),
       rows: rows.map((r, i) => ({
         rank: i + 1,

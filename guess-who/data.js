@@ -1,8 +1,8 @@
 /* =======================================================================
    Guess Who? — content
 
-   The picture opens with exactly half the face showing. The cover slides
-   away second by second and the points fall as it goes.
+   The picture opens with just a quarter of the face showing. The cover
+   slides away second by second and the points fall as it goes.
 
    name   the answer
    img    a face, cropped square. 600 x 600 or better looks sharpest.

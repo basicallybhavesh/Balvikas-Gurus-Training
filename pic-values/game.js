@@ -106,10 +106,15 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  document.getElementById('startBtn').onclick = function () {
-    document.getElementById('start').hidden = true;
-    document.getElementById('play').hidden = false;
-    paint();
-    BV.timer.start();
+  const startBtn = document.getElementById('startBtn');
+  startBtn.onclick = function () {
+    startBtn.disabled = true;
+    startBtn.textContent = 'Loading pictures…';
+    BV.preloadImages(DATA.scenes.map(sc => sc.image)).then(() => {
+      document.getElementById('start').hidden = true;
+      document.getElementById('play').hidden = false;
+      paint();
+      BV.timer.start();
+    });
   };
 })();

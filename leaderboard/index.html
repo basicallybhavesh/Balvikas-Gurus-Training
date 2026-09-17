@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/core.css?v=3">
+<link rel="stylesheet" href="/assets/core.css?v=4">
 <style>
   /* Display board: big type, generous spacing, meant for a projector or TV. */
   body{padding:0}
@@ -100,6 +100,22 @@
 
   .none{padding:48px 20px;text-align:center;color:var(--ink-soft);font-size:1.2rem}
   .none b{display:block;font-family:'Yatra One',serif;font-size:1.6rem;color:var(--ink);margin-bottom:6px}
+
+  /* ---------------------------- skeleton state -------------------------- */
+  .skel{position:relative;overflow:hidden;display:inline-block;background:var(--accent-wash);border-radius:6px}
+  .skel::after{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);
+    animation:shimmer 1.3s ease-in-out infinite
+  }
+  @keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+  .step.skeleton{box-shadow:none}
+  .step.skeleton .skel.medal{width:1.6em;height:1.6em;border-radius:50%}
+  .step.skeleton .skel.who{width:70%;height:1.1em;margin:2px auto}
+  .step.skeleton .skel.pts{width:50%;height:1.4em;margin:4px auto 0}
+  .row.skeleton .skel.name{width:min(220px,60%);height:1em}
+  .row.skeleton .skel.score{width:60px;height:1em;margin-left:auto}
+  @media(prefers-reduced-motion: reduce){.skel::after{animation:none}}
 
   /* ------------------------------ picker ------------------------------ */
   .picker{max-width:720px;margin:0 auto;padding:clamp(24px,5vw,60px) 16px}
@@ -254,6 +270,28 @@
   const MEDALS = ['🥇', '🥈', '🥉'];
   const STEPS = ['first', 'second', 'third'];
 
+  function skeletonStep(i) {
+    return '<div class="step ' + STEPS[i] + ' skeleton">' +
+      '<div class="medal skel">&nbsp;</div>' +
+      '<div class="who skel">&nbsp;</div>' +
+      '<div class="pts skel">&nbsp;</div>' +
+    '</div>';
+  }
+
+  function skeletonRow(rank) {
+    return '<div class="row skeleton">' +
+      '<span class="rank">' + rank + '</span>' +
+      '<span class="name skel">&nbsp;</span>' +
+      '<span class="score skel">&nbsp;</span>' +
+      '<span class="time"></span>' +
+    '</div>';
+  }
+
+  function renderSkeleton() {
+    podium.innerHTML = skeletonStep(1) + skeletonStep(0) + skeletonStep(2);
+    list.innerHTML = Array.from({ length: 5 }, (_, i) => skeletonRow(i + 4)).join('');
+  }
+
   function step(r, i) {
     if (!r) return '<div class="step ' + STEPS[i] + ' empty"><div class="medal">' + MEDALS[i] + '</div><div class="who">Waiting for a player</div></div>';
     return '<div class="step ' + STEPS[i] + '">' +
@@ -315,7 +353,7 @@
     }
     refreshBtn.disabled = false;
     clearTimeout(timer);
-    timer = setTimeout(load, REFRESH_MS);
+    if (!document.hidden) timer = setTimeout(load, REFRESH_MS);
   }
 
   document.addEventListener('keydown', ev => {
@@ -326,8 +364,12 @@
     else if (ev.key === 'q' || ev.key === 'Q') { qrPop.hidden ? openQr() : closeQr(); }
     else if (ev.key === 'Escape') closeQr();
   });
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) load(); });
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) clearTimeout(timer);
+    else load();
+  });
 
+  renderSkeleton();
   load();
 })();
 </script>

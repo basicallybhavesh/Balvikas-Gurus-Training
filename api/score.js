@@ -32,16 +32,18 @@ export default async function handler(req, res) {
   try {
     const sql = db();
     const rows = await withSchema(() => sql`
-      INSERT INTO scores (game, player, score, max_score, duration_ms, meta)
-      VALUES (${game}, ${player}, ${score}, ${maxScore}, ${durationMs}, ${JSON.stringify(meta)}::jsonb)
-      RETURNING id, created_at`);
+      WITH ins AS (
+        INSERT INTO scores (game, player, score, max_score, duration_ms, meta)
+        VALUES (${game}, ${player}, ${score}, ${maxScore}, ${durationMs}, ${JSON.stringify(meta)}::jsonb)
+        RETURNING id
+      )
+      SELECT ins.id,
+             (SELECT COUNT(*)::int FROM scores
+               WHERE game = ${game}
+                 AND (score > ${score} OR (score = ${score} AND duration_ms < ${durationMs}))) AS better
+      FROM ins`);
 
-    const rank = await sql`
-      SELECT COUNT(*)::int AS better FROM scores
-      WHERE game = ${game}
-        AND (score > ${score} OR (score = ${score} AND duration_ms < ${durationMs}))`;
-
-    res.status(200).json({ ok: true, id: rows[0].id, rank: rank[0].better + 1 });
+    res.status(200).json({ ok: true, id: rows[0].id, rank: rows[0].better + 1 });
   } catch (err) {
     console.error('score insert failed', err);
     fail(res, 500, 'Could not save the score. Check the database connection.');

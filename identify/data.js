@@ -17,7 +17,7 @@ window.IDENTIFY = {
   decoys: ['Nachiketa', 'Sudama', 'Shabari', 'Andal', 'Ekalavya', 'Savitri', 'Kurma avatar', 'Varaha avatar'],
   items: [
     { name: 'Prahlada',
-      img: '/assets/img/prahlada.png',
+      img: '/assets/img/prahlada.jpg',
       after: 'Son of Hiranyakashipu, who could not be argued out of the name he loved. The pillar he pointed to split open.' },
 
     { name: 'Meerabai',

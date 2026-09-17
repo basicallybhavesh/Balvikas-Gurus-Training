@@ -62,6 +62,7 @@ export default function handler(req, res) {
     <div class="row">
       <button class="go" id="initBtn">Set up tables</button>
       <button id="refreshBtn">Refresh counts</button>
+      <button id="exportBtn">Download all scores (Excel)</button>
       <button class="danger" id="wipeBtn">Clear every leaderboard</button>
     </div>
     <p class="muted" style="margin:10px 0 0">Run “Set up tables” once after connecting Neon. It is safe to run again — nothing is deleted.</p>
@@ -211,6 +212,32 @@ document.addEventListener('click', async (ev) => {
 
 document.getElementById('refreshBtn').onclick = load;
 document.getElementById('boardClose').onclick = closeBoard;
+
+function csvCell(v){ return '"' + String(v).replace(/"/g, '""') + '"'; }
+
+document.getElementById('exportBtn').onclick = async () => {
+  try {
+    const data = await act('exportAll');
+    const header = ['Name', 'Game', 'Points', 'Out of', 'Time', 'Played at'];
+    const lines = [header.map(csvCell).join(',')];
+    data.rows.forEach(r => {
+      lines.push([
+        csvCell(r.player), csvCell(titleOf(r.game)), csvCell(r.score), csvCell(r.max_score),
+        csvCell(fmtTime(r.duration_ms)), csvCell(fmtDate(r.created_at))
+      ].join(','));
+    });
+    const blob = new Blob(['\\uFEFF' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'balvikas-scores-' + new Date().toISOString().slice(0, 10) + '.csv';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    say('Downloaded ' + data.rows.length + ' entries.');
+  } catch (e) { say(e.message, true); }
+};
 
 document.getElementById('initBtn').onclick = async () => {
   try { await act('init'); say('Tables are ready.'); load(); }

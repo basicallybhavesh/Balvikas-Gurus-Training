@@ -40,8 +40,11 @@
     rail.now(ix);
 
     pic.src = p.img;
-    pic.alt = 'Half a face, gradually uncovering';
+    pic.alt = 'Most of the face is hidden, gradually uncovering';
+    cover.style.transition = 'none';
     cover.style.width = '75%';
+    cover.offsetWidth; // force reflow so the jump above is not animated
+    cover.style.transition = '';
     worthEl.textContent = HIGH;
 
     optsEl.innerHTML = optionsFor(p).map(n =>
@@ -112,7 +115,7 @@
       const right = breakdown.filter(b => b.ok).length;
       return BV.finish({
         score, maxScore: MAX,
-        headline: score === MAX ? 'Named on half a face' : 'Faces finished',
+        headline: score === MAX ? 'Named on a sliver of a face' : 'Faces finished',
         sub: right + ' of ' + deck.length + ' named',
         breakdown, meta: { named: right }
       });
@@ -122,11 +125,16 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  document.getElementById('startBtn').onclick = function () {
-    document.getElementById('start').hidden = true;
-    document.getElementById('play').hidden = false;
-    startRound();
-    BV.timer.start();
+  const startBtn = document.getElementById('startBtn');
+  startBtn.onclick = function () {
+    startBtn.disabled = true;
+    startBtn.textContent = 'Loading pictures…';
+    BV.preloadImages(deck.map(p => p.img)).then(() => {
+      document.getElementById('start').hidden = true;
+      document.getElementById('play').hidden = false;
+      startRound();
+      BV.timer.start();
+    });
   };
 })();
 

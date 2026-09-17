@@ -41,6 +41,13 @@ export default async function handler(req, res) {
       return res.status(200).json({ ok: true, game, rows });
     }
 
+    if (action === 'exportAll') {
+      const rows = await withSchema(() => sql`
+        SELECT game, player, score, max_score, duration_ms, created_at
+        FROM scores ORDER BY created_at DESC`);
+      return res.status(200).json({ ok: true, rows });
+    }
+
     if (action === 'clear') {
       const game = String(body.game || '');
       if (!SLUGS.includes(game)) return fail(res, 400, 'Unknown game.');

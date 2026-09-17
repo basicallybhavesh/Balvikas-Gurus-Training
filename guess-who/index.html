@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/core.css?v=3">
+<link rel="stylesheet" href="/assets/core.css?v=4">
 <style>
   .face{
     position:relative;width:min(300px,78vw);aspect-ratio:1/1;margin:0 auto 14px;
@@ -16,7 +16,7 @@
   }
   .face img{width:100%;height:100%;object-fit:cover;display:block}
   .cover{
-    position:absolute;top:0;right:0;bottom:0;width:50%;
+    position:absolute;top:0;right:0;bottom:0;width:75%;
     background:repeating-linear-gradient(135deg,#2E5C48 0 10px,#27503E 10px 20px);
     border-left:2px solid rgba(255,255,255,.5);
     transition:width .25s linear;
@@ -58,8 +58,8 @@
   <section id="start" class="panel center" style="margin-top:6px">
     <span class="tag">Game 5</span>
     <h1 style="font-size:1.8rem;margin:12px 0 8px">Guess Who?</h1>
-    <p class="lede" style="margin:0 auto 6px">You get half a face to begin with. The cover slides away a little every second, and so do the points. Name them while you still can.</p>
-    <p class="hint">400 while half the face is hidden, sliding down to 100 once it is fully open. One guess each.</p>
+    <p class="lede" style="margin:0 auto 6px">You get just a sliver of a face to begin with. The cover slides away a little every second, and so do the points. Name them while you still can.</p>
+    <p class="hint">400 while most of the face is hidden, sliding down to 100 once it is fully open. One guess each.</p>
     <div class="btnrow"><button class="btn" id="startBtn">Start</button></div>
   </section>
 
@@ -67,7 +67,7 @@
     <div class="rail" id="rail"></div>
     <div class="worthbar"><b id="worth">400</b><span>points if you answer now</span></div>
     <div class="face" id="face">
-      <img id="pic" alt="Half a face, gradually uncovering">
+      <img id="pic" alt="Most of the face is hidden, gradually uncovering">
       <div class="cover" id="cover"></div>
     </div>
     <div class="clue" id="clue" hidden></div>
@@ -81,7 +81,7 @@
 <footer class="foot" data-site="footer"></footer>
 
 <script src="/assets/site.js?v=3"></script>
-<script src="/assets/core.js?v=3"></script>
+<script src="/assets/core.js?v=4"></script>
 <script src="/guess-who/data.js"></script>
 <script src="/guess-who/game.js"></script>
 </body>
