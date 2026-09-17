@@ -104,6 +104,14 @@
   .foot a{color:var(--ink-soft)}
   .foot .kbd{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:1px 7px;font-weight:700;font-size:.8rem}
 
+  .site{
+    margin:26px 0 0;text-align:center;font-family:'Yatra One',serif;
+    font-size:clamp(1.05rem,2.2vw,1.4rem);color:var(--accent);
+    white-space:normal;overflow:visible;line-height:1.3
+  }
+  .site::before{content:'✦ ';color:var(--gold)}
+  .site::after{content:' ✦';color:var(--gold)}
+
   body.tv .foot,body.tv .meta .hint{display:none}
   body.tv .board{max-width:1180px}
 
@@ -121,6 +129,7 @@
 
 <main id="app" class="board" aria-live="polite"></main>
 
+<script src="/assets/site.js"></script>
 <script>
 (function () {
   const GAMES = [
@@ -132,6 +141,7 @@
     { slug: 'count-faces', title: 'Count the Happy Faces',       accent: 'marigold', tint: '#B97A06' },
     { slug: 'identify',    title: 'Identify the Character',      accent: 'plum',     tint: '#6E2E6B' }
   ];
+  const SITE_NAME = (window.SITE && (window.SITE.footer || window.SITE.name)) || 'Sri Sathya Sai Balvikas Gurus Training';
   const REFRESH_MS = 10000;
   const LIMIT = 50;
 
@@ -152,7 +162,8 @@
       '<p>Pick a game to put its board on the big screen.</p>' +
       '<div class="grid">' + GAMES.map(g =>
         '<a href="/leaderboard?game=' + g.slug + '" style="--tint:' + g.tint + '">' + esc(g.title) + '</a>'
-      ).join('') + '</div>';
+      ).join('') + '</div>' +
+      '<p class="site">' + esc(SITE_NAME) + '</p>';
     return;
   }
 
@@ -175,7 +186,8 @@
     '<footer class="foot">' +
       '<span>Points first; ties go to the faster finish. Checks for new scores every ' + (REFRESH_MS / 1000) + ' seconds.</span>' +
       '<span><a href="/leaderboard">All boards</a> &nbsp;·&nbsp; <a href="/' + game.slug + '">Play</a> &nbsp;·&nbsp; <span class="kbd">F</span> full screen</span>' +
-    '</footer>';
+    '</footer>' +
+    '<p class="site">' + esc(SITE_NAME) + '</p>';
 
   const podium = document.getElementById('podium');
   const list = document.getElementById('list');
