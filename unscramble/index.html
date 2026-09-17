@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unscramble the Hidden Word</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/core.css">
+<style>
+  .clue{
+    background:var(--card);border:1px solid var(--line);border-left:5px solid var(--accent);
+    border-radius:12px;padding:14px 16px;font-size:1.02rem;line-height:1.5;margin-bottom:16px;
+  }
+  .fuse{height:7px;border-radius:4px;background:var(--line);overflow:hidden;margin-bottom:18px}
+  .fuse i{display:block;height:100%;background:var(--accent);width:100%;transition:width .25s linear}
+  .fuse.low i{background:var(--bad)}
+  .answer{
+    display:flex;flex-wrap:wrap;gap:6px;justify-content:center;
+    min-height:62px;margin-bottom:18px;
+  }
+  .pool{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:6px}
+  .letter{
+    font:inherit;font-weight:800;font-size:clamp(1.05rem,4.4vw,1.35rem);
+    width:clamp(38px,10.5vw,48px);height:clamp(46px,12.5vw,56px);
+    border-radius:10px;cursor:pointer;border:none;
+    background:var(--accent);color:#fff;box-shadow:0 4px 0 rgba(0,0,0,.2);
+    display:grid;place-items:center;
+  }
+  .letter:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.2)}
+  .letter.spent{visibility:hidden}
+  .answer .letter{background:var(--card);color:var(--ink);border:2px solid var(--accent);box-shadow:none}
+  .answer .blank{
+    width:clamp(38px,10.5vw,48px);height:clamp(46px,12.5vw,56px);
+    border-radius:10px;border:2px dashed var(--line);
+  }
+  .answer.right .letter{background:var(--good);color:#fff;border-color:var(--good)}
+  .answer.wrong .letter{border-color:var(--bad);color:var(--bad)}
+  .toolbar{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+  .reveal{text-align:center;font-family:'Yatra One',serif;font-size:1.5rem;margin:10px 0}
+</style>
+</head>
+<body data-accent="indigo">
+<div class="wrap">
+
+  <section id="start" class="panel center" style="margin-top:6px">
+    <span class="tag">Game 3</span>
+    <h1 style="font-size:1.8rem;margin:12px 0 8px">Unscramble the Hidden Word</h1>
+    <p class="lede" style="margin:0 auto 6px">Ten words, each with a clue and a fuse burning down. Tap the letters in the right order. Tap a letter you already placed to send it back.</p>
+    <p class="hint">120 points a word, plus up to 80 more for speed. A hint costs 40.</p>
+    <div class="btnrow"><button class="btn" id="startBtn">Start</button></div>
+  </section>
+
+  <section id="play" hidden>
+    <div class="rail" id="rail"></div>
+    <div class="clue" id="clue"></div>
+    <div class="fuse" id="fuse"><i></i></div>
+    <div class="answer" id="answer"></div>
+    <div class="pool" id="pool"></div>
+    <div class="toolbar">
+      <button class="btn ghost small" id="hintBtn">Hint (−40)</button>
+      <button class="btn ghost small" id="clearBtn">Clear</button>
+      <button class="btn ghost small" id="skipBtn">Skip word</button>
+    </div>
+    <div class="reveal" id="reveal" hidden></div>
+    <div class="btnrow"><button class="btn" id="nextBtn" hidden>Next word</button></div>
+  </section>
+
+</div>
+<footer class="foot" data-site="footer"></footer>
+
+<script src="/assets/site.js"></script>
+<script src="/assets/core.js"></script>
+<script src="/unscramble/data.js"></script>
+<script src="/unscramble/game.js"></script>
+</body>
+</html>

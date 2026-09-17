@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guess Who?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/core.css">
+<style>
+  .face{
+    position:relative;width:min(300px,78vw);aspect-ratio:1/1;margin:0 auto 14px;
+    border-radius:16px;overflow:hidden;border:1px solid var(--line);
+    background:#EFE3CB;box-shadow:var(--shadow);
+  }
+  .face img{width:100%;height:100%;object-fit:cover;display:block}
+  .cover{
+    position:absolute;top:0;right:0;bottom:0;width:50%;
+    background:repeating-linear-gradient(135deg,#2E5C48 0 10px,#27503E 10px 20px);
+    border-left:2px solid rgba(255,255,255,.5);
+    transition:width .25s linear;
+  }
+  .cover::after{
+    content:'';position:absolute;left:0;top:0;bottom:0;width:26px;
+    background:linear-gradient(90deg,rgba(0,0,0,.35),transparent);
+  }
+  .worthbar{display:flex;align-items:baseline;justify-content:center;gap:9px;margin-bottom:12px}
+  .worthbar b{font-family:'Yatra One',serif;font-size:2rem;color:var(--accent);line-height:1;font-variant-numeric:tabular-nums}
+  .worthbar span{font-size:.82rem;color:var(--ink-soft)}
+  .clue{
+    text-align:center;font-size:.95rem;line-height:1.5;color:var(--ink);
+    background:var(--accent-wash);border-radius:12px;padding:12px 14px;margin-bottom:14px;
+  }
+  .clue[hidden]{display:none}
+  .opts{display:grid;gap:9px;grid-template-columns:1fr 1fr}
+  @media(min-width:560px){.opts{grid-template-columns:1fr 1fr 1fr}}
+  .opt{
+    font:inherit;font-weight:700;font-size:.92rem;cursor:pointer;line-height:1.2;
+    padding:14px 8px;border-radius:12px;border:2px solid var(--line);
+    background:var(--card);color:var(--ink);
+  }
+  .opt:hover{border-color:var(--accent)}
+  .opt.right{border-color:var(--good);background:#E8F5EE;color:var(--good)}
+  .opt.wrong{border-color:var(--bad);background:#FBE9EB;color:var(--bad)}
+  .opt:disabled{cursor:default;opacity:.55}
+  .opt.right:disabled,.opt.wrong:disabled{opacity:1}
+  .verdict{text-align:center;font-family:'Yatra One',serif;font-size:1.35rem;margin:14px 0 2px}
+  .after{
+    margin-top:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:13px 15px;font-size:.93rem;line-height:1.55;text-align:center;
+  }
+</style>
+</head>
+<body data-accent="tulsi">
+<div class="wrap">
+
+  <section id="start" class="panel center" style="margin-top:6px">
+    <span class="tag">Game 5</span>
+    <h1 style="font-size:1.8rem;margin:12px 0 8px">Guess Who?</h1>
+    <p class="lede" style="margin:0 auto 6px">You get half a face to begin with. The cover slides away a little every second, and so do the points. Name them while you still can.</p>
+    <p class="hint">400 while half the face is hidden, sliding down to 100 once it is fully open. One guess each.</p>
+    <div class="btnrow"><button class="btn" id="startBtn">Start</button></div>
+  </section>
+
+  <section id="play" hidden>
+    <div class="rail" id="rail"></div>
+    <div class="worthbar"><b id="worth">400</b><span>points if you answer now</span></div>
+    <div class="face" id="face">
+      <img id="pic" alt="Half a face, gradually uncovering">
+      <div class="cover" id="cover"></div>
+    </div>
+    <div class="clue" id="clue" hidden></div>
+    <div class="opts" id="opts"></div>
+    <div class="verdict" id="verdict" hidden></div>
+    <div class="after" id="after" hidden></div>
+    <div class="btnrow"><button class="btn" id="nextBtn" hidden>Next face</button></div>
+  </section>
+
+</div>
+<footer class="foot" data-site="footer"></footer>
+
+<script src="/assets/site.js"></script>
+<script src="/assets/core.js"></script>
+<script src="/guess-who/data.js"></script>
+<script src="/guess-who/game.js"></script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Who Said It?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/core.css">
+<style>
+  .quotebox{
+    position:relative;background:var(--card);border:1px solid var(--line);
+    border-radius:18px;padding:30px 22px 24px;margin-bottom:16px;box-shadow:var(--shadow-sm);
+  }
+  .quotebox::before{
+    content:'”';position:absolute;top:-6px;left:14px;
+    font-family:'Yatra One',serif;font-size:4.5rem;color:var(--accent-wash);line-height:1;
+  }
+  .quotebox q{
+    position:relative;display:block;quotes:none;
+    font-family:'Yatra One',serif;font-size:clamp(1.15rem,4.4vw,1.5rem);
+    line-height:1.5;text-align:center;
+  }
+  .quotebox q.long{font-size:clamp(1rem,3.5vw,1.2rem);line-height:1.55}
+  .fuse{height:7px;border-radius:4px;background:var(--line);overflow:hidden;margin-bottom:16px}
+  .fuse i{display:block;height:100%;background:var(--accent);width:100%}
+  .fuse.low i{background:var(--bad)}
+  .opts{display:grid;gap:9px}
+  @media(min-width:520px){.opts{grid-template-columns:1fr 1fr}}
+  .opt{
+    font:inherit;font-weight:700;font-size:1rem;cursor:pointer;text-align:left;
+    padding:15px 16px;border-radius:13px;border:2px solid var(--line);
+    background:var(--card);color:var(--ink);
+  }
+  .opt:hover{border-color:var(--accent)}
+  .opt.right{border-color:var(--good);background:#E8F5EE;color:var(--good)}
+  .opt.wrong{border-color:var(--bad);background:#FBE9EB;color:var(--bad)}
+  .opt:disabled{cursor:default}
+  .opt:disabled:not(.right):not(.wrong){opacity:.5}
+  .note{
+    margin-top:14px;background:var(--accent-wash);border-radius:12px;
+    padding:13px 15px;font-size:.92rem;line-height:1.5;color:var(--ink);
+  }
+  .streak{
+    text-align:center;font-weight:700;font-size:.85rem;color:var(--accent);
+    min-height:20px;margin-bottom:8px;
+  }
+</style>
+</head>
+<body data-accent="rose">
+<div class="wrap">
+
+  <section id="start" class="panel center" style="margin-top:6px">
+    <span class="tag">Game 4</span>
+    <h1 style="font-size:1.8rem;margin:12px 0 8px">Who Said It?</h1>
+    <p class="lede" style="margin:0 auto 6px">A line appears and the bar starts falling. Pick the one who said it. Answer in the first second and you keep every point; wait and they drain away.</p>
+    <p class="hint">60 points a right answer, up to 60 more for speed, and 40 extra for every answer once you are on a run of three.</p>
+    <div class="btnrow"><button class="btn" id="startBtn">Start</button></div>
+  </section>
+
+  <section id="play" hidden>
+    <div class="rail" id="rail"></div>
+    <div class="streak" id="streak"></div>
+    <div class="quotebox"><q id="quote"></q></div>
+    <div class="fuse" id="fuse"><i></i></div>
+    <div class="opts" id="opts"></div>
+    <div class="note" id="note" hidden></div>
+    <div class="btnrow"><button class="btn" id="nextBtn" hidden>Next</button></div>
+  </section>
+
+</div>
+<footer class="foot" data-site="footer"></footer>
+
+<script src="/assets/site.js"></script>
+<script src="/assets/core.js"></script>
+<script src="/who-said-it/data.js"></script>
+<script src="/who-said-it/game.js"></script>
+</body>
+</html>

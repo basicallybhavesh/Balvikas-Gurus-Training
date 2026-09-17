@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Online Games</title>
+<meta name="description" content="Seven short games with live leaderboards.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/core.css">
+<style>
+  .hero{text-align:center;padding:36px 0 26px}
+  .hero h1{font-size:clamp(2.1rem,7vw,3rem);line-height:1.1;margin:14px 0 10px}
+  .lamp{
+    width:clamp(88px,24vw,112px);height:clamp(88px,24vw,112px);margin:0 auto;
+    border-radius:50%;display:grid;place-items:center;font-size:clamp(2.2rem,8vw,2.9rem);
+    background:radial-gradient(circle at 50% 42%,#FFE9B0,#F0C868 62%,#DDAE47);
+    box-shadow:0 14px 34px rgba(190,140,40,.32);
+  }
+  .hero p{margin:0 auto;max-width:50ch;color:var(--ink-soft);line-height:1.6}
+  .grid{display:grid;gap:12px;grid-template-columns:1fr}
+  @media(min-width:620px){ .grid{grid-template-columns:1fr 1fr} }
+  .tile{
+    display:flex;gap:14px;align-items:flex-start;text-decoration:none;color:inherit;
+    background:var(--card);border:1px solid var(--line);border-left:6px solid var(--tint,#D75B16);
+    border-radius:14px;padding:15px 16px;box-shadow:var(--shadow-sm);
+    transition:transform .14s ease;
+  }
+  .tile:hover,.tile:focus-visible{transform:translateY(-3px)}
+  .tile .no{
+    flex:none;width:30px;height:30px;border-radius:9px;margin-top:2px;
+    display:grid;place-items:center;font-weight:800;font-size:.9rem;
+    background:var(--tint);color:#fff;
+  }
+  .tile h2{font-size:1.06rem;margin-bottom:3px}
+  .tile p{margin:0;font-size:.85rem;color:var(--ink-soft);line-height:1.45}
+  .strip{
+    margin:30px 0 6px;background:var(--card);border:1px solid var(--line);
+    border-radius:14px;padding:16px 18px;
+  }
+  .strip h3{font-size:1.05rem;margin-bottom:6px}
+  .strip p{font-size:.88rem;color:var(--ink-soft);margin:0;line-height:1.6}
+  .section-title{margin:28px 0 12px;font-size:1.2rem}
+</style>
+</head>
+<body data-accent="saffron">
+<div class="wrap">
+
+  <header class="hero">
+    <div class="lamp">&#129525;</div>
+    <h1 data-site="name">Online Games</h1>
+    <p data-site="tagline"></p>
+  </header>
+
+  <h2 class="section-title">Pick a game</h2>
+  <nav class="grid">
+    <a class="tile" href="/pic-values" style="--tint:#D75B16">
+      <span class="no">1</span>
+      <span><h2>One Pic, Many Values</h2>
+      <p>One picture, many values inside it. Tick every one you can honestly see.</p></span>
+    </a>
+    <a class="tile" href="/matching" style="--tint:#0E6D75">
+      <span class="no">2</span>
+      <span><h2>Shrines and Locations</h2>
+      <p>Drag each shrine onto the place it stands in. Fourteen of them, across every faith on the island.</p></span>
+    </a>
+    <a class="tile" href="/unscramble" style="--tint:#4B3B8F">
+      <span class="no">3</span>
+      <span><h2>Unscramble the Hidden Word</h2>
+      <p>The letters have scattered. Put the value back together before the fuse burns out.</p></span>
+    </a>
+    <a class="tile" href="/who-said-it" style="--tint:#B23A6B">
+      <span class="no">4</span>
+      <span><h2>Who Said It?</h2>
+      <p>A line appears and the bar starts falling. Every second you hesitate costs you points.</p></span>
+    </a>
+    <a class="tile" href="/guess-who" style="--tint:#1F6F4A">
+      <span class="no">5</span>
+      <span><h2>Guess Who?</h2>
+      <p>You get half a face to start with. The cover slides away, and so do the points.</p></span>
+    </a>
+    <a class="tile" href="/count-faces" style="--tint:#B97A06">
+      <span class="no">6</span>
+      <span><h2>Count the Happy Faces</h2>
+      <p>A crowd appears for a few seconds, then the lights go out. No second looks unless you pay for one.</p></span>
+    </a>
+    <a class="tile" href="/identify" style="--tint:#6E2E6B">
+      <span class="no">7</span>
+      <span><h2>Identify the Character</h2>
+      <p>A picture clears slowly out of the mist. Name it early and keep the points.</p></span>
+    </a>
+  </nav>
+
+  <div class="strip">
+    <h3>How the boards work</h3>
+    <p>Every game keeps its own leaderboard. Points come first, and a tie goes to whoever finished faster. The clock stops before the name box appears, so take your time spelling it. Your name is remembered on this device for the next game. Any board can be refreshed to pull in attempts made since you opened it.</p>
+  </div>
+
+</div>
+<footer class="foot" data-site="footer">Online Games</footer>
+
+<script src="/assets/site.js"></script>
+<script>
+  document.title = SITE.name;
+  document.querySelectorAll('[data-site="name"]').forEach(e => { e.textContent = SITE.name; });
+  document.querySelectorAll('[data-site="tagline"]').forEach(e => { e.textContent = SITE.tagline; });
+  document.querySelectorAll('[data-site="footer"]').forEach(e => { e.textContent = SITE.footer; });
+</script>
+</body>
+</html>

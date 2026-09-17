@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shrines and Locations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/core.css">
+<style>
+  .tray{
+    display:flex;flex-wrap:wrap;gap:9px;justify-content:center;
+    background:var(--accent-wash);border:1px dashed var(--accent);
+    border-radius:14px;padding:12px;min-height:66px;margin-bottom:18px;
+    position:sticky;top:60px;z-index:10;
+  }
+  .tray:empty::after{content:'All labels placed. Press Check answers.';color:var(--accent);font-size:.85rem;font-weight:700}
+  .rows{display:grid;gap:10px}
+  .row{
+    display:grid;grid-template-columns:minmax(104px,1.1fr) 58px minmax(0,1.3fr);
+    gap:10px;align-items:center;
+  }
+  .row .slot{min-height:54px}
+  .row .media{
+    width:58px;height:58px;border-radius:10px;overflow:hidden;
+    border:1px solid var(--line);background:var(--paper-deep);
+    display:grid;place-items:center;font-size:1.7rem;
+  }
+  .row .media img{width:100%;height:100%;object-fit:cover}
+  .row .who{font-weight:700;font-size:1rem;line-height:1.25}
+  .row.graded .who small{display:block;font-weight:600;font-size:.74rem;color:var(--bad)}
+  .slot .chip{box-shadow:none;width:100%}
+  .roundhead{margin-bottom:12px}
+  .roundhead h2{font-size:1.25rem}
+  .roundhead p{margin:2px 0 0;font-size:.86rem;color:var(--ink-soft)}
+  @media(min-width:640px){
+    .row{grid-template-columns:minmax(140px,1fr) 74px minmax(0,1.2fr)}
+    .row .media{width:74px;height:74px;font-size:2.1rem}
+  }
+</style>
+</head>
+<body data-accent="peacock">
+<div class="wrap">
+
+  <section id="start" class="panel center" style="margin-top:6px">
+    <span class="tag">Game 2</span>
+    <h1 style="font-size:1.8rem;margin:12px 0 8px">Shrines and Locations</h1>
+    <p class="lede" style="margin:0 auto 6px" id="introText"></p>
+    <p class="hint">Three rounds of shrines. Every correct match is 100 points, and the clock is running.</p>
+    <div class="btnrow"><button class="btn" id="startBtn">Start</button></div>
+  </section>
+
+  <section id="play" hidden>
+    <div class="rail" id="rail"></div>
+    <div class="roundhead">
+      <h2 id="roundTitle"></h2>
+      <p id="roundNote"></p>
+    </div>
+    <div id="board">
+      <div class="tray" id="tray"></div>
+      <div class="rows" id="rows"></div>
+    </div>
+    <div class="btnrow">
+      <button class="btn" id="checkBtn">Check answers</button>
+    </div>
+  </section>
+
+</div>
+<footer class="foot" data-site="footer"></footer>
+
+<script src="/assets/site.js"></script>
+<script src="/assets/core.js"></script>
+<script src="/matching/data.js"></script>
+<script src="/matching/game.js"></script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One Pic, Many Values</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/core.css">
+<style>
+  .pic{
+    width:100%;aspect-ratio:4/3;max-height:52vh;border-radius:16px;overflow:hidden;
+    border:1px solid var(--line);background:#EFE3CB;box-shadow:var(--shadow-sm);
+    margin-bottom:14px;display:grid;place-items:center;
+  }
+  .pic img{width:100%;height:100%;object-fit:cover}
+  .pic img.contain{object-fit:contain;background:#fff}
+  .ask{text-align:center;font-family:'Yatra One',serif;font-size:clamp(1.1rem,4.2vw,1.4rem);margin-bottom:4px}
+  .askhint{text-align:center;color:var(--ink-soft);font-size:.86rem;margin-bottom:14px}
+  .bank{display:grid;gap:8px;grid-template-columns:1fr 1fr}
+  @media(min-width:560px){.bank{grid-template-columns:1fr 1fr 1fr}}
+  .val{
+    font:inherit;font-weight:700;font-size:.92rem;cursor:pointer;line-height:1.25;
+    padding:13px 10px;border-radius:12px;border:2px solid var(--line);
+    background:var(--card);color:var(--ink);position:relative;
+  }
+  .val:hover{border-color:var(--accent)}
+  .val.on{border-color:var(--accent);background:var(--accent-wash);color:var(--accent)}
+  .val.hit{border-color:var(--good);background:#E8F5EE;color:var(--good)}
+  .val.slip{border-color:var(--bad);background:#FBE9EB;color:var(--bad)}
+  .val.missed{border-color:var(--gold);background:#FBF0D6;color:#8A6510}
+  .val.missed::after{content:'missed';position:absolute;right:6px;top:4px;font-size:.6rem;opacity:.8}
+  .val:disabled{cursor:default}
+  .val:disabled:not(.hit):not(.slip):not(.missed){opacity:.45}
+  .tally{text-align:center;font-weight:700;color:var(--accent);min-height:22px;margin:12px 0 0}
+  .after{
+    margin-top:14px;background:var(--accent-wash);border-radius:12px;
+    padding:13px 15px;font-size:.93rem;line-height:1.55;
+  }
+</style>
+</head>
+<body data-accent="saffron">
+<div class="wrap">
+
+  <section id="start" class="panel center" style="margin-top:6px">
+    <span class="tag">Game 1</span>
+    <h1 style="font-size:1.8rem;margin:12px 0 8px">One Pic, Many Values</h1>
+    <p class="lede" style="margin:0 auto 6px">One picture holds more than one value. Tick every value you can honestly see in it, and leave the ones that are not there alone.</p>
+    <p class="hint">100 for each value you find. 50 off for each one you tick that is not really there. A picture can never take you below zero.</p>
+    <div class="btnrow"><button class="btn" id="startBtn">Start</button></div>
+  </section>
+
+  <section id="play" hidden>
+    <div class="rail" id="rail"></div>
+    <div class="pic" id="pic"></div>
+    <p class="ask" id="ask">Which values does this picture show?</p>
+    <p class="askhint" id="askhint"></p>
+    <div class="bank" id="bank"></div>
+    <p class="tally" id="tally"></p>
+    <div class="after" id="after" hidden></div>
+    <div class="btnrow">
+      <button class="btn" id="submitBtn">Submit</button>
+    </div>
+  </section>
+
+</div>
+<footer class="foot" data-site="footer"></footer>
+
+<script src="/assets/site.js"></script>
+<script src="/assets/core.js"></script>
+<script src="/pic-values/data.js"></script>
+<script src="/pic-values/game.js"></script>
+</body>
+</html>

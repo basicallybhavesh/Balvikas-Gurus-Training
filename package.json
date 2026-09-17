@@ -1,0 +1,10 @@
+{
+  "name": "online-games",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Seven activity games with per-game leaderboards on Neon Postgres.",
+  "dependencies": {
+    "@neondatabase/serverless": "^0.10.4"
+  }
+}
