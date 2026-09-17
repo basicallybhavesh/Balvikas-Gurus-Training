@@ -17,7 +17,7 @@ window.IDENTIFY = {
   decoys: ['Nachiketa', 'Sudama', 'Shabari', 'Andal', 'Ekalavya', 'Savitri', 'Kurma avatar', 'Varaha avatar'],
   items: [
     { name: 'Prahlada',
-      img: '/assets/img/prahlada.jpg',
+      img: '/assets/img/prahlada.png',
       after: 'Son of Hiranyakashipu, who could not be argued out of the name he loved. The pillar he pointed to split open.' },
 
     { name: 'Meerabai',
@@ -33,7 +33,7 @@ window.IDENTIFY = {
       after: 'Lifted off a lap that was not his, he walked into the forest at five years old and came back as the Pole Star.' },
 
     { name: 'Markandeya',
-      img: '/assets/img/markandeya.png',
+      img: '/assets/img/markandeya.jpg',
       after: 'Given only sixteen years to live, he held on to what he worshipped and was granted the years no one had promised him.' }
   ]
 };
