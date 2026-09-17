@@ -12,11 +12,11 @@
 
 window.COUNTFACES = {
   rounds: [
-    { total: 18, min: 4,  max: 8,  seconds: 6, drift: false },
-    { total: 26, min: 6,  max: 11, seconds: 6, drift: false },
-    { total: 34, min: 8,  max: 14, seconds: 5, drift: false },
-    { total: 42, min: 10, max: 17, seconds: 5, drift: true  },
-    { total: 50, min: 12, max: 20, seconds: 4, drift: true  },
-    { total: 60, min: 14, max: 24, seconds: 4, drift: true  }
+    { total: 18, min: 4,  max: 8,  seconds: 10, drift: false },
+    { total: 26, min: 6,  max: 11, seconds: 12, drift: false },
+    { total: 34, min: 8,  max: 14, seconds: 14, drift: false },
+    { total: 42, min: 8,  max: 14, seconds: 16, drift: true  },
+    { total: 50, min: 8,  max: 14, seconds: 18, drift: true  },
+    { total: 60, min: 8,  max: 14, seconds: 20, drift: true  }
   ]
 };

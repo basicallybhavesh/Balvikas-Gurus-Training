@@ -37,7 +37,7 @@ Unzip this folder, then in a terminal inside it:
 ```bash
 git init
 git add .
-git commit -m "Seven games with leaderboards"
+git commit -m "Balvikas Gurus Training"
 ```
 
 On github.com click **New repository**, name it (for example `online-games`),
@@ -54,7 +54,7 @@ Run them. Your code is now on GitHub.
 
 ### 2. Create the database on Neon
 
-1. Sign in at **neon.com** and click **New project**.
+1. Sign in at **git push -u origin main** and click **New project**.
 2. Name it, pick the region closest to your players (Singapore or Mumbai for
    South Asia), and create it.
 3. On the project dashboard find **Connection string**. Make sure the
