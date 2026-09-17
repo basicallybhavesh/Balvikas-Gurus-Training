@@ -11,6 +11,10 @@
   const NAME_KEY = 'bv:player';
   const SOUND_KEY = 'bv:sound';
 
+  /* Keep the page invisible until BV.setup has put the top bar in place,
+     otherwise the bar pops in a beat later and everything jumps down. */
+  document.documentElement.classList.add('bv-loading');
+
   /* ----------------------------- utilities ---------------------------- */
 
   BV.esc = s => String(s).replace(/[&<>"']/g, c =>
@@ -166,6 +170,12 @@
     sBtn.onclick = () => { Sfx.toggle(); paint(); if (Sfx.on) Sfx.tick(); };
 
     buildSheet();
+
+    // Reveal once the web fonts are in too, so text does not reflow. Never wait more than a moment.
+    const reveal = () => document.documentElement.classList.remove('bv-loading');
+    const fonts = document.fonts && document.fonts.ready;
+    if (fonts) Promise.race([fonts, new Promise(r => setTimeout(r, 700))]).then(reveal, reveal);
+    else reveal();
   };
 
   BV.setScore = function (n) { if (scoreEl) scoreEl.textContent = n; };

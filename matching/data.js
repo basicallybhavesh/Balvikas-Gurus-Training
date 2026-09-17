@@ -37,17 +37,17 @@ window.MATCHING = {
       ]
     },
 
-    {
-      title: 'Across every faith',
-      note: 'The island keeps more than one kind of shrine.',
-      items: [
-        { label: 'Seetha Amman Temple',            answer: 'Nuwara Eliya',        icon: '\u{1F33F}' },
-        { label: 'Basilica of Our Lady of Madhu',  answer: 'Mannar District',     icon: '\u26EA' },
-        { label: 'Jami Ul-Alfar Mosque',           answer: 'Pettah, Colombo',     icon: '\u{1F54C}' },
-        { label: 'Kelaniya Raja Maha Vihara',      answer: 'Kelaniya',            icon: '\u{1F3EF}' },
-        { label: 'Mihintale',                      answer: 'Anuradhapura District', icon: '\u{1FAA8}' }
-      ]
-    }
+    // {
+    //   title: 'Across every faith',
+    //   note: 'The island keeps more than one kind of shrine.',
+    //   items: [
+    //     { label: 'Seetha Amman Temple',            answer: 'Nuwara Eliya',        icon: '\u{1F33F}' },
+    //     { label: 'Basilica of Our Lady of Madhu',  answer: 'Mannar District',     icon: '\u26EA' },
+    //     { label: 'Jami Ul-Alfar Mosque',           answer: 'Pettah, Colombo',     icon: '\u{1F54C}' },
+    //     { label: 'Kelaniya Raja Maha Vihara',      answer: 'Kelaniya',            icon: '\u{1F3EF}' },
+    //     { label: 'Mihintale',                      answer: 'Anuradhapura District', icon: '\u{1FAA8}' }
+    //   ]
+    // }
 
   ]
 };

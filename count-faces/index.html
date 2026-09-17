@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="bv-loading">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/core.css">
+<link rel="stylesheet" href="/assets/core.css?v=3">
 <style>
   .crowd{
     position:relative;aspect-ratio:4/3;margin:0 auto 14px;
@@ -25,13 +25,8 @@
   .crowd b.drift{animation:sway 3.4s ease-in-out infinite alternate}
   @keyframes sway{to{transform:translate(-50%,-50%) translate(8px,-6px)}}
   .crowd b.dim{opacity:.16;transition:opacity .4s ease}
-  .curtain{
-    position:absolute;inset:0;display:grid;place-items:center;text-align:center;
-    background:#1E2430;color:#fff;padding:20px;
-    font-family:'Yatra One',serif;font-size:clamp(1.05rem,4.2vw,1.4rem);line-height:1.5;
-  }
-  .curtain[hidden]{display:none}
-  .fuse{height:7px;border-radius:4px;background:var(--line);overflow:hidden;margin-bottom:14px}
+  .fuse{height:7px;border-radius:4px;background:var(--line);overflow:hidden;margin-bottom:6px}
+  .bonus{text-align:center;font-size:.85rem;font-weight:700;color:var(--ink-soft);margin:0 0 12px;font-variant-numeric:tabular-nums}
   .fuse i{display:block;height:100%;background:var(--accent);width:100%;transition:width .1s linear}
   .fuse.low i{background:var(--bad)}
   .askline{text-align:center;font-family:'Yatra One',serif;font-size:clamp(1.1rem,4.2vw,1.4rem);margin-bottom:10px}
@@ -57,8 +52,8 @@
   <section id="start" class="panel center" style="margin-top:6px;max-width:680px;margin-left:auto;margin-right:auto">
     <span class="tag">Game 6</span>
     <h1 style="font-size:1.8rem;margin:12px 0 8px">Count the Happy Faces</h1>
-    <p class="lede" style="margin:0 auto 6px">A crowd appears for a few seconds, then the lights go out. Only the open, smiling ones count. Angry, sad, startled and blank do not.</p>
-    <p class="hint">150 for the exact number, 50 if you are one off. A second look costs you half the round. The crowd is drawn fresh every time, so nobody can memorise the answer.</p>
+    <p class="lede" style="margin:0 auto 6px">A crowd appears. Count only the open, smiling faces. Angry, sad, startled and blank do not count.</p>
+    <p class="hint">The faster you answer, the more you earn: an exact count is worth up to 150, dropping to 50 as the bar runs down. One off earns a third of that. The crowd is drawn fresh every time, so nobody can memorise the answer.</p>
     <div class="btnrow"><button class="btn" id="startBtn">Start</button></div>
   </section>
 
@@ -66,8 +61,9 @@
     <div class="rail" id="rail"></div>
     <p class="askline">How many <span style="color:var(--accent)">happy</span> faces?</p>
     <div class="fuse" id="fuse"><i></i></div>
+    <p class="bonus" id="bonus"></p>
     <div class="crowd" id="crowd"></div>
-    <div id="answerArea" hidden>
+    <div id="answerArea">
       <div class="counter">
         <button type="button" class="step" id="minus" aria-label="One fewer">&minus;</button>
         <input id="guess" type="number" inputmode="numeric" min="0" max="99" value="0">
@@ -75,7 +71,6 @@
       </div>
       <div class="btnrow">
         <button class="btn" id="lockBtn">That is my answer</button>
-        <button class="btn ghost small" id="peekBtn">Look again (half points)</button>
       </div>
     </div>
     <div class="verdict" id="verdict" hidden></div>
@@ -85,8 +80,8 @@
 </div>
 <footer class="foot" data-site="footer"></footer>
 
-<script src="/assets/site.js"></script>
-<script src="/assets/core.js"></script>
+<script src="/assets/site.js?v=3"></script>
+<script src="/assets/core.js?v=3"></script>
 <script src="/count-faces/faces.js"></script>
 <script src="/count-faces/data.js"></script>
 <script src="/count-faces/game.js"></script>

@@ -251,3 +251,9 @@ footer.foot{
   text-align:center;color:var(--ink-soft);font-size:.76rem;
   padding:26px 12px 40px;opacity:.75;
 }
+
+/* --------------------------- first paint --------------------------- */
+/* Game pages start with html.bv-loading; core.js removes it once the top
+   bar and fonts are in, so nothing jumps. If scripts never run, reveal anyway. */
+html.bv-loading body{visibility:hidden;animation:bv-reveal 0s 3s forwards}
+@keyframes bv-reveal{to{visibility:visible}}
