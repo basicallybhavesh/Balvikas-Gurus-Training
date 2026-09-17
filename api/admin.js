@@ -226,7 +226,7 @@ document.getElementById('exportBtn').onclick = async () => {
         csvCell(fmtTime(r.duration_ms)), csvCell(fmtDate(r.created_at))
       ].join(','));
     });
-    const blob = new Blob(['\\uFEFF' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
+    const blob = new Blob(['\\uFEFF' + lines.join('\\r\\n')], { type: 'text/csv;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
