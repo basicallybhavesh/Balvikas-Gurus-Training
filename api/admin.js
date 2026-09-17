@@ -70,7 +70,7 @@ export default function handler(req, res) {
 
   <div class="panel">
     <h2>Leaderboards</h2>
-    <p class="muted" style="margin:-6px 0 12px">Click a game name to see its full leaderboard.</p>
+    <p class="muted" style="margin:-6px 0 12px">Click a game name to open its display board in a new tab (press <code>F</code> there for full screen). <strong>Entries</strong> lists every score here so you can remove one.</p>
     <table><thead><tr>
       <th>Game</th><th class="num">Entries</th><th class="num">Top score</th><th class="num">Last played</th><th></th>
     </tr></thead><tbody id="statsBody">
@@ -122,11 +122,12 @@ function renderStats(stats){
   const body = document.getElementById('statsBody');
   body.innerHTML = GAMES.map(g => {
     const s = stats[g.slug] || { plays:0, top:null, last:null };
-    return '<tr><td><a href="#" class="game" data-board="' + g.slug + '">' + esc(g.title) + '</a></td>' +
+    return '<tr><td><a href="/leaderboard?game=' + g.slug + '" class="game" target="_blank" rel="noopener" title="Open the display board in a new tab">' + esc(g.title) + ' ↗</a></td>' +
       '<td class="num">' + s.plays + '</td>' +
       '<td class="num">' + (s.top === null ? '—' : s.top) + '</td>' +
       '<td class="num">' + fmtDate(s.last) + '</td>' +
-      '<td style="text-align:right"><button class="danger" data-clear="' + g.slug + '"' + (s.plays ? '' : ' disabled') + '>Clear</button></td></tr>';
+      '<td style="text-align:right;white-space:nowrap"><button data-board="' + g.slug + '">Entries</button> ' +
+      '<button class="danger" data-clear="' + g.slug + '"' + (s.plays ? '' : ' disabled') + '>Clear</button></td></tr>';
   }).join('');
 }
 

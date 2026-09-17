@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Leaderboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/core.css">
+<style>
+  /* Display board: big type, generous spacing, meant for a projector or TV. */
+  body{padding:0}
+  .board{max-width:1040px;margin:0 auto;padding:clamp(18px,3vw,40px) clamp(14px,3vw,32px) 60px}
+
+  .head{
+    display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap;
+    margin-bottom:clamp(18px,3vw,30px)
+  }
+  .head .tag{font-size:.9rem;padding:6px 16px;margin-bottom:10px}
+  .head h1{font-size:clamp(2rem,5.2vw,3.6rem);line-height:1.05}
+  .meta{
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    color:var(--ink-soft);font-size:1rem;font-weight:600
+  }
+  .meta .dot{width:9px;height:9px;border-radius:50%;background:var(--good);box-shadow:0 0 0 4px rgba(31,122,77,.18)}
+  .meta .dot.off{background:var(--bad);box-shadow:0 0 0 4px rgba(180,48,63,.18)}
+  .meta .dot.busy{background:var(--gold);box-shadow:0 0 0 4px rgba(227,168,31,.22)}
+
+  /* ------------------------------ podium ------------------------------ */
+  .podium{
+    display:grid;grid-template-columns:1fr 1.15fr 1fr;gap:clamp(10px,2vw,18px);
+    align-items:end;margin-bottom:clamp(18px,3vw,28px)
+  }
+  .step{
+    background:var(--card);border:1px solid var(--line);border-radius:22px;
+    box-shadow:var(--shadow);text-align:center;padding:clamp(16px,2.4vw,26px) 14px;
+    position:relative;overflow:hidden;min-height:150px;
+    display:flex;flex-direction:column;justify-content:flex-end;gap:6px;
+  }
+  .step::before{
+    content:'';position:absolute;inset:0 0 auto 0;height:7px;background:var(--medal)
+  }
+  .step.first{--medal:linear-gradient(90deg,#E3A81F,#F6D46A);min-height:190px;border-color:#EAC968}
+  .step.second{--medal:linear-gradient(90deg,#9AA3AD,#D2D8DE)}
+  .step.third{--medal:linear-gradient(90deg,#B4713E,#DCA277)}
+  .step .medal{font-size:clamp(1.9rem,4vw,2.8rem);line-height:1}
+  .step .who{
+    font-family:'Yatra One',serif;font-size:clamp(1.25rem,2.8vw,1.9rem);line-height:1.15;
+    overflow-wrap:anywhere
+  }
+  .step.first .who{font-size:clamp(1.5rem,3.4vw,2.3rem)}
+  .step .pts{font-size:clamp(1.5rem,3.4vw,2.3rem);font-weight:800;color:var(--accent);line-height:1.1;font-variant-numeric:tabular-nums}
+  .step .pts small{font-size:.5em;font-weight:700;color:var(--ink-soft)}
+  .step .time{color:var(--ink-soft);font-size:.95rem;font-weight:600;font-variant-numeric:tabular-nums}
+  .step.empty{opacity:.45;box-shadow:none}
+  .step.empty .who{color:var(--ink-soft);font-family:inherit;font-weight:600;font-size:1rem}
+
+  /* ------------------------------- list ------------------------------- */
+  .list{
+    background:var(--card);border:1px solid var(--line);border-radius:22px;
+    box-shadow:var(--shadow-sm);overflow:hidden
+  }
+  .row{
+    display:grid;grid-template-columns:3.2rem 1fr auto auto;align-items:center;
+    gap:clamp(10px,2vw,22px);padding:clamp(10px,1.6vw,15px) clamp(14px,2.6vw,28px);
+    border-bottom:1px solid var(--line);font-size:clamp(1.05rem,2.1vw,1.45rem)
+  }
+  .row:last-child{border-bottom:none}
+  .row:nth-child(even){background:rgba(244,231,205,.35)}
+  .row .rank{
+    width:2.6rem;height:2.6rem;border-radius:50%;display:grid;place-items:center;
+    background:var(--accent-wash);color:var(--accent);font-weight:800;font-size:.85em
+  }
+  .row .name{font-weight:700;overflow-wrap:anywhere}
+  .row .score{font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .row .score small{font-weight:600;color:var(--ink-soft);font-size:.7em}
+  .row .time{color:var(--ink-soft);font-variant-numeric:tabular-nums;font-weight:600;font-size:.85em;min-width:3.6em;text-align:right}
+  .row.head{background:transparent;color:var(--ink-soft);font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding-top:12px;padding-bottom:12px}
+  .row.head .rank{background:none}
+  .row.hi{animation:pop .9s ease-out}
+  @keyframes pop{0%{background:var(--accent-wash)}100%{background:transparent}}
+
+  .none{padding:48px 20px;text-align:center;color:var(--ink-soft);font-size:1.2rem}
+  .none b{display:block;font-family:'Yatra One',serif;font-size:1.6rem;color:var(--ink);margin-bottom:6px}
+
+  /* ------------------------------ picker ------------------------------ */
+  .picker{max-width:720px;margin:0 auto;padding:clamp(24px,5vw,60px) 16px}
+  .picker h1{font-size:clamp(2rem,6vw,3rem);text-align:center;margin-bottom:8px}
+  .picker p{text-align:center;color:var(--ink-soft);margin-bottom:26px}
+  .picker .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+  .picker a{
+    display:block;padding:18px 18px;background:var(--card);border:1px solid var(--line);
+    border-left:8px solid var(--tint);border-radius:16px;text-decoration:none;color:var(--ink);
+    font-family:'Yatra One',serif;font-size:1.1rem;box-shadow:var(--shadow-sm)
+  }
+  .picker a:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+
+  .foot{
+    margin-top:22px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+    color:var(--ink-soft);font-size:.9rem
+  }
+  .foot a{color:var(--ink-soft)}
+  .foot .kbd{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:1px 7px;font-weight:700;font-size:.8rem}
+
+  body.tv .foot,body.tv .meta .hint{display:none}
+  body.tv .board{max-width:1180px}
+
+  @media(max-width:640px){
+    .podium{grid-template-columns:1fr 1fr 1fr}
+    .step{min-height:120px;padding:14px 8px}
+    .step.first{min-height:150px}
+    .row{grid-template-columns:2.4rem 1fr auto;gap:10px}
+    .row .time{display:none}
+    .row .rank{width:2.1rem;height:2.1rem}
+  }
+</style>
+</head>
+<body data-accent="saffron">
+
+<main id="app" class="board" aria-live="polite"></main>
+
+<script>
+(function () {
+  const GAMES = [
+    { slug: 'pic-values',  title: 'One Pic, Many Values',        accent: 'saffron',  tint: '#D75B16' },
+    { slug: 'matching',    title: 'Shrines and Locations',       accent: 'peacock',  tint: '#0E6D75' },
+    { slug: 'unscramble',  title: 'Unscramble the Hidden Word',  accent: 'indigo',   tint: '#4B3B8F' },
+    { slug: 'who-said-it', title: 'Who Said It?',                accent: 'rose',     tint: '#B23A6B' },
+    { slug: 'guess-who',   title: 'Guess Who?',                  accent: 'tulsi',    tint: '#1F6F4A' },
+    { slug: 'count-faces', title: 'Count the Happy Faces',       accent: 'marigold', tint: '#B97A06' },
+    { slug: 'identify',    title: 'Identify the Character',      accent: 'plum',     tint: '#6E2E6B' }
+  ];
+  const REFRESH_MS = 10000;
+  const LIMIT = 50;
+
+  const app = document.getElementById('app');
+  const params = new URLSearchParams(location.search);
+  const game = GAMES.find(g => g.slug === params.get('game'));
+
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]));
+  const fmtTime = ms => { const s = Math.round(ms / 1000); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
+  const fmtClock = d => d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+
+  /* ---------------------------- game picker ---------------------------- */
+  if (!game) {
+    document.title = 'Leaderboards';
+    app.className = 'picker';
+    app.innerHTML =
+      '<h1>Leaderboards</h1>' +
+      '<p>Pick a game to put its board on the big screen.</p>' +
+      '<div class="grid">' + GAMES.map(g =>
+        '<a href="/leaderboard?game=' + g.slug + '" style="--tint:' + g.tint + '">' + esc(g.title) + '</a>'
+      ).join('') + '</div>';
+    return;
+  }
+
+  /* ---------------------------- display board -------------------------- */
+  document.body.dataset.accent = game.accent;
+  document.title = game.title + ' · Leaderboard';
+  if (params.has('tv')) document.body.classList.add('tv');
+
+  let lastKey = '';       // signature of the last render, to spot new entries
+  let timer = null;
+
+  app.innerHTML =
+    '<header class="head">' +
+      '<div><span class="tag">Leaderboard</span><h1>' + esc(game.title) + '</h1></div>' +
+      '<div class="meta"><span class="dot busy" id="dot"></span><span id="status">Loading…</span>' +
+        '<button class="btn ghost small" id="refreshBtn" type="button">↻ Refresh</button></div>' +
+    '</header>' +
+    '<section class="podium" id="podium"></section>' +
+    '<section class="list" id="list"></section>' +
+    '<footer class="foot">' +
+      '<span>Points first; ties go to the faster finish. Checks for new scores every ' + (REFRESH_MS / 1000) + ' seconds.</span>' +
+      '<span><a href="/leaderboard">All boards</a> &nbsp;·&nbsp; <a href="/' + game.slug + '">Play</a> &nbsp;·&nbsp; <span class="kbd">F</span> full screen</span>' +
+    '</footer>';
+
+  const podium = document.getElementById('podium');
+  const list = document.getElementById('list');
+  const status = document.getElementById('status');
+  const dot = document.getElementById('dot');
+  const refreshBtn = document.getElementById('refreshBtn');
+  refreshBtn.addEventListener('click', load);
+
+  const MEDALS = ['🥇', '🥈', '🥉'];
+  const STEPS = ['first', 'second', 'third'];
+
+  function step(r, i) {
+    if (!r) return '<div class="step ' + STEPS[i] + ' empty"><div class="medal">' + MEDALS[i] + '</div><div class="who">Waiting for a player</div></div>';
+    return '<div class="step ' + STEPS[i] + '">' +
+      '<div class="medal">' + MEDALS[i] + '</div>' +
+      '<div class="who">' + esc(r.player) + '</div>' +
+      '<div class="pts">' + r.score + '<small> / ' + r.maxScore + '</small></div>' +
+      '<div class="time">⏱ ' + fmtTime(r.durationMs) + '</div>' +
+    '</div>';
+  }
+
+  function setStatus(data, note) {
+    status.textContent = data.plays + (data.plays === 1 ? ' play' : ' plays') + ' · ' + note + ' ' + fmtClock(new Date());
+    dot.className = 'dot';
+  }
+
+  function render(data) {
+    const rows = data.rows;
+    const key = data.plays + '#' + rows.map(r => r.player + '|' + r.score + '|' + r.durationMs).join(';');
+    const first = lastKey === '';
+    if (key === lastKey) { setStatus(data, 'checked'); return; }   // nothing new: leave the screen alone
+    const changed = !first;
+    lastKey = key;
+
+    // Podium order on screen: 2nd, 1st, 3rd
+    podium.innerHTML = step(rows[1], 1) + step(rows[0], 0) + step(rows[2], 2);
+
+    const rest = rows.slice(3);
+    if (!rows.length) {
+      list.innerHTML = '<div class="none"><b>No scores yet</b>Be the first to play ' + esc(game.title) + '.</div>';
+    } else if (!rest.length) {
+      list.innerHTML = '<div class="none">Only ' + rows.length + (rows.length === 1 ? ' player' : ' players') + ' so far — room on the board!</div>';
+    } else {
+      list.innerHTML =
+        '<div class="row head"><span class="rank">#</span><span>Player</span><span>Score</span><span class="time">Time</span></div>' +
+        rest.map((r, i) =>
+          '<div class="row' + (changed ? ' hi' : '') + '">' +
+            '<span class="rank">' + (i + 4) + '</span>' +
+            '<span class="name">' + esc(r.player) + '</span>' +
+            '<span class="score">' + r.score + '<small> / ' + r.maxScore + '</small></span>' +
+            '<span class="time">' + fmtTime(r.durationMs) + '</span>' +
+          '</div>'
+        ).join('');
+    }
+
+    setStatus(data, first ? 'loaded' : 'updated');
+  }
+
+  async function load() {
+    dot.className = 'dot busy';
+    refreshBtn.disabled = true;
+    try {
+      const res = await fetch('/api/leaderboard?game=' + game.slug + '&limit=' + LIMIT, { cache: 'no-store' });
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.error || 'Could not load.');
+      render(data);
+    } catch (e) {
+      dot.className = 'dot off';
+      status.textContent = 'Could not refresh — retrying';
+    }
+    refreshBtn.disabled = false;
+    clearTimeout(timer);
+    timer = setTimeout(load, REFRESH_MS);
+  }
+
+  document.addEventListener('keydown', ev => {
+    if (ev.key === 'f' || ev.key === 'F') {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else document.documentElement.requestFullscreen && document.documentElement.requestFullscreen();
+    } else if (ev.key === 'r' || ev.key === 'R') load();
+  });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) load(); });
+
+  load();
+})();
+</script>
+</body>
+</html>
